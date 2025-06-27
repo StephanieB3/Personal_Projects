@@ -1,0 +1,261 @@
+/* General body styling */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #f8f8f8;
+  text-align: center;
+}
+
+/* Header styles (3-part layout) */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: white;
+  color: black;
+  position: relative; /* needed for dropdown positioning */
+}
+
+/* Left, center, right layout containers */
+.header-left,
+.header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  justify-content: flex-start;
+  position: relative; /* so dropdown anchors to this */
+}
+
+.logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px; /* ✅ fixed from 10x */
+}
+
+.logo .title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.b-logo {
+  width: 30px;
+  height: 30px;
+  fill: #001f3f;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+/* Three-line icon styling */
+.menu-icon {
+  width: 30px;
+  cursor: pointer;
+}
+
+/* Dropdown menu directly under menu icon */
+.dropdown-menu {
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: #333;
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu li {
+  padding: 10px 20px;
+}
+
+.dropdown-menu li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #444;
+}
+
+/* Cart icon styling */
+.bag-icon {
+  width: 28px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+/* Hero section styling */
+.hero h1 {
+  margin-top: 60px;
+  font-size: 2rem;
+  color: #333;
+}
+
+/* Modal overlay background */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal content box */
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* Input styling inside modal */
+.modal-content input {
+  padding: 10px;
+  width: 80%;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+/* Button styling inside modal */
+.modal-content button {
+  padding: 10px 20px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#logout-btn {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.product-grid {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+}
+
+.product-card {
+  width: 30%;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.product-detail {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.image-box {
+  width: 50%;
+  max-width: 40px;
+  margin: 0 auto 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image-box img {
+  width: 50%;
+  display: block;
+  object-fit: fill;
+  transition: opacity 0.3s ease;
+}
+
+/* === Contact Page Styles === */
+
+.contact-section {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.contact-section h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #222;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: navy;
+}
+
+.contact-form button {
+  align-self: flex-start;
+  padding: 12px 30px;
+  background-color: navy;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #001f5f;
+}

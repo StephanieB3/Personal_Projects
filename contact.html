@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us | plantuniform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ✅ Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/threelines.svg" alt="Menu" class="menu-icon" id="menu-toggle">
+      <ul class="dropdown-menu" id="dropdown">
+        <li><a href="flannels.html">Flannels</a></li>
+        <li><a href="tshirts.html">T-shirts</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="logo">
+      <span class="title">plantuniform</span>
+      <svg class="b-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="navy" d="M12 2l2.7 6.5 7.3.6-5.5 4.8 1.8 7.1L12 17.3l-6.3 3.8 1.8-7.1-5.5-4.8 7.3-.6L12 2z"/>
+      </svg>
+    </div>
+
+    <div class="header-right">
+      <a href="cart.html">
+        <img src="images/shoppingbag.svg" alt="Bag" class="bag-icon">
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ Contact Section -->
+  <section class="contact-section">
+    <h1>Contact Us</h1>
+    <form class="contact-form" action="https://formspree.io/f/mvgrdqod" method="POST">
+      <input type="text" name="name" placeholder="your name" required />
+      <input type="email" name="email" placeholder="your email" required />
+      <input type="text" name="subject" placeholder="subject" required />
+      <textarea name="message" placeholder="your message" rows="6" required></textarea>
+      <input type="hidden" name="_redirect" value="Thank you for reaching out! We will get assist you as soon as possible!">
+      <button type="submit">send message</button>
+    </form>
+  </section>
+
+  <script src="website.js"></script>
+</body>
+</html>

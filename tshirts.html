@@ -1,0 +1,22 @@
+<section class="product-grid" id="product-grid"></section>
+
+<script>
+fetch('https://YOUR-RENDER-URL/products') // use localhost:5000 if local
+  .then(res => res.json())
+  .then(products => {
+    const grid = document.getElementById('product-grid');
+    products.forEach(product => {
+      const card = document.createElement('a');
+      card.href = `product.html?slug=${product.slug}`;
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h2>${product.name}</h2>
+        <p>Size: ${product.size}</p>
+        <p>$${product.price.toFixed(2)}</p>
+      `;
+      grid.appendChild(card);
+    });
+  })
+  .catch(console.error);
+</script>
