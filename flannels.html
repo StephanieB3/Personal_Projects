@@ -38,9 +38,24 @@
     <section class="product-grid" id="product-grid"></section>
   </main>
 
-  <!-- ✅ Script -->
+  <!-- ✅ Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // ✅ DROPDOWN MENU TOGGLE
+      const toggle = document.getElementById('menu-toggle');
+      const dropdown = document.getElementById('dropdown');
+
+      toggle.addEventListener('click', () => {
+        dropdown.classList.toggle('show');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // ✅ FETCH PRODUCTS
       fetch('https://personal-projects-1.onrender.com/products')
         .then(res => {
           if (!res.ok) {
@@ -52,6 +67,12 @@
           const grid = document.getElementById('product-grid');
           if (!grid) {
             console.error('❌ product-grid element not found.');
+            return;
+          }
+
+          if (!Array.isArray(products) || products.length === 0) {
+            console.warn('⚠️ No products returned.');
+            grid.innerHTML = '<p>No products available.</p>';
             return;
           }
 
