@@ -1,22 +1,92 @@
-<section class="product-grid" id="product-grid"></section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>T-shirts</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-<script>
-fetch('https://YOUR-RENDER-URL/products') // use localhost:5000 if local
-  .then(res => res.json())
-  .then(products => {
-    const grid = document.getElementById('product-grid');
-    products.forEach(product => {
-      const card = document.createElement('a');
-      card.href = `product.html?slug=${product.slug}`;
-      card.className = 'product-card';
-      card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
-        <h2>${product.name}</h2>
-        <p>Size: ${product.size}</p>
-        <p>$${product.price.toFixed(2)}</p>
-      `;
-      grid.appendChild(card);
+  <!-- ✅ Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/threelines.svg" alt="Menu" class="menu-icon" id="menu-toggle">
+      <ul class="dropdown-menu" id="dropdown">
+        <li><a href="flannels.html">Flannels</a></li>
+        <li><a href="tshirts.html">T-shirts</a></li>
+        <li><a href="pants.html">Pants</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="logo">
+      <span class="title">plantuniform</span>
+      <svg class="b-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="navy" d="M12 2l2.7 6.5 7.3.6-5.5 4.8 1.8 7.1L12 17.3l-6.3 3.8 1.8-7.1-5.5-4.8 7.3-.6L12 2z"/>
+      </svg>
+    </div>
+    <div class="header-right">
+      <a href="cart.html">
+        <img src="images/shoppingbag.svg" alt="Bag" class="bag-icon">
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ Main Content -->
+  <main>
+    <section class="product-grid" id="product-grid"></section>
+  </main>
+
+  <!-- ✅ Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ✅ Dropdown toggle
+      const toggle = document.getElementById('menu-toggle');
+      const dropdown = document.getElementById('dropdown');
+
+      toggle.addEventListener('click', () => {
+        dropdown.classList.toggle('show');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // ✅ Fetch only T-shirts category products
+      fetch('https://personal-projects-1.onrender.com/products?category=tshirts')
+        .then(res => res.json())
+        .then(products => {
+          const grid = document.getElementById('product-grid');
+          if (!grid) {
+            console.error('❌ No #product-grid found!');
+            return;
+          }
+
+          if (products.length === 0) {
+            grid.innerHTML = '<p class="coming-soon">Coming soon!</p>';
+            return;
+          }
+
+          products.forEach(product => {
+            const card = document.createElement('a');
+            card.href = `product.html?slug=${product.slug}`;
+            card.className = 'product-card';
+            card.innerHTML = `
+              <img src="${product.image}" alt="${product.name}">
+              <h2>${product.name}</h2>
+              <p>Size: ${product.size}</p>
+              <p>$${product.price.toFixed(2)}</p>
+            `;
+            grid.appendChild(card);
+          });
+        })
+        .catch(err => {
+          console.error('❌ Error fetching products:', err);
+        });
     });
-  })
-  .catch(console.error);
-</script>
+  </script>
+
+</body>
+</html>

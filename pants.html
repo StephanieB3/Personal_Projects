@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flannels</title>
+  <title>Pants</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -40,7 +40,6 @@
   <!-- ✅ Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Dropdown toggle
       const toggle = document.getElementById('menu-toggle');
       const dropdown = document.getElementById('dropdown');
       toggle.addEventListener('click', () => {
@@ -52,8 +51,8 @@
         }
       });
 
-      // ✅ Fetch flannels only
-      fetch('https://personal-projects-1.onrender.com/products?category=flannels')
+      // ✅ Fetch pants only
+      fetch('https://personal-projects-1.onrender.com/products?category=pants')
         .then(res => res.json())
         .then(products => {
           const grid = document.getElementById('product-grid');

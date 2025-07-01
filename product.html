@@ -1,11 +1,113 @@
-<section class="product-detail">
-  <div class="image-box" id="image-box">
-    <img src="images/rflannelfront.jpg" alt="Product Front" id="product-image">
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Detail</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-    <h1>Red Aglaonema</h1>
-    <p>Size: S</p>
-    <p>Price: $45.00</p>
+  <!-- ✅ Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/threelines.svg" alt="Menu" class="menu-icon" id="menu-toggle">
+      <ul class="dropdown-menu" id="dropdown">
+        <li><a href="flannels.html">Flannels</a></li>
+        <li><a href="tshirts.html">T-shirts</a></li>
+        <li><a href="pants.html">Pants</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="logo">
+      <span class="title">plantuniform</span>
+      <svg class="b-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="navy" d="M12 2l2.7 6.5 7.3.6-5.5 4.8 1.8 7.1L12 17.3l-6.3 3.8 1.8-7.1-5.5-4.8 7.3-.6L12 2z"/>
+      </svg>
+    </div>
+
+    <div class="header-right">
+      <a href="cart.html">
+        <img src="images/shoppingbag.svg" alt="Bag" class="bag-icon">
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ Product Detail Section -->
+  <section class="product-detail">
+    <div class="image-box" id="image-box">
+      <img src="" alt="Product Image" id="product-image">
+    </div>
+
+    <h1 id="product-name"></h1>
+    <p id="product-size"></p>
+    <p id="product-price"></p>
     <p>1 of 1</p>
     <button>Add to Bag</button>
-</section>
+  </section>
+
+  <!-- ✅ Script for Dropdown Menu + Dynamic Product Fetch + Image Toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ✅ Dropdown menu
+      const toggle = document.getElementById('menu-toggle');
+      const dropdown = document.getElementById('dropdown');
+
+      toggle.addEventListener('click', () => {
+        dropdown.classList.toggle('show');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // ✅ Get slug from URL
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug');
+
+      if (!slug) {
+        alert('No product slug provided!');
+        return;
+      }
+
+      // ✅ Fetch product data from your backend
+      fetch(`https://personal-projects-1.onrender.com/products/${slug}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Product not found.');
+          }
+          return res.json();
+        })
+        .then(product => {
+          // Fill in the page
+          document.getElementById('product-name').textContent = product.name;
+          document.getElementById('product-size').textContent = `Size: ${product.size}`;
+          document.getElementById('product-price').textContent = `Price: $${product.price.toFixed(2)}`;
+
+          // Image toggle setup
+          const imageBox = document.getElementById('image-box');
+          const productImage = document.getElementById('product-image');
+
+          const frontView = product.image;
+          const backView = product.backImage; // Make sure your DB has this field!
+          let showingFront = true;
+
+          productImage.src = frontView;
+
+          imageBox.addEventListener('click', () => {
+            productImage.src = showingFront ? backView : frontView;
+            showingFront = !showingFront;
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Could not load product details.');
+        });
+    });
+  </script>
+
+</body>
+</html>

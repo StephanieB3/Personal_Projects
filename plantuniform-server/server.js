@@ -17,11 +17,19 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ MongoDB Atlas connection established!'))
+.then(() => {
+  console.log('✅ MongoDB Atlas connection established!');
+})
 .catch((err) => {
   console.error('❌ MongoDB connection error:', err);
-  process.exit(1); // Exit if DB fails to connect
+  process.exit(1);
 });
+
+mongoose.connection.on('connected', () => {
+  console.log('✅ DB name:', mongoose.connection.name);
+  console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
+});
+
 
 // ✅ API Routes
 const productsRoute = require('./routes/products');
@@ -40,3 +48,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
+

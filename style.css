@@ -191,19 +191,19 @@ header {
 }
 
 .image-box {
-  width: 50%;
-  max-width: 40px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  cursor: pointer;
+  cursor: pointer;   /* ✅ Shows it’s clickable! */
   overflow: hidden;
 }
 
 .image-box img {
-  width: 50%;
+  width: 100%;
   display: block;
-  object-fit: fill;
+  object-fit: cover;
   transition: opacity 0.3s ease;
 }
 
@@ -258,4 +258,11 @@ header {
 
 .contact-form button:hover {
   background-color: #001f5f;
+}
+
+/*coming soon*/
+.coming-soon {
+  font-size: 1.5rem;
+  color: #555;
+  margin-top: 60px;
 }
