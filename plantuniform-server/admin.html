@@ -59,11 +59,11 @@
   <div class="image-preview" id="image-preview"></div>
   <p id="result"></p>
 
-  <!-- ✅ Phone Numbers Dropdown -->
+  <!-- ✅ Phone Numbers List -->
   <h2>📱 Collected Phone Numbers</h2>
-  <select id="phone-dropdown">
-    <option>Loading...</option>
-  </select>
+  <ul id="phone-list">
+    <li>Loading...</li>
+  </ul>
 
   <!-- ✅ Products List -->
   <h2>📋 Existing Products</h2>
@@ -74,7 +74,7 @@
     const result = document.getElementById('result');
     const preview = document.getElementById('image-preview');
     const list = document.getElementById('product-list');
-    const dropdown = document.getElementById('phone-dropdown');
+    const phoneList = document.getElementById('phone-list');
 
     const BACKEND_URL = 'https://personal-projects-1.onrender.com'; // ✅ Your backend URL
 
@@ -123,22 +123,21 @@
       });
     }
 
-    // ✅ Load phone numbers for dropdown
+    // ✅ Load phone numbers as a list
     async function loadPhoneNumbers() {
       const res = await fetch(`${BACKEND_URL}/api/phone`);
       const phones = await res.json();
-      dropdown.innerHTML = '';
+      phoneList.innerHTML = '';
 
       if (phones.length === 0) {
-        dropdown.innerHTML = '<option>No phone numbers</option>';
+        phoneList.innerHTML = '<li>No phone numbers</li>';
         return;
       }
 
       phones.forEach(phone => {
-        const option = document.createElement('option');
-        option.value = phone.number;
-        option.textContent = phone.number;
-        dropdown.appendChild(option);
+        const li = document.createElement('li');
+        li.textContent = phone.number;
+        phoneList.appendChild(li);
       });
     }
 
