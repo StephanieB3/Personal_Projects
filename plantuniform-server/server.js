@@ -1,6 +1,4 @@
-// ✅ Load environment variables first
 require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -23,32 +21,33 @@ mongoose.connect(process.env.MONGO_URI, {
   process.exit(1);
 });
 
+// ✅ Debug collections
 mongoose.connection.on('connected', () => {
   console.log('✅ DB name:', mongoose.connection.name);
   console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
 });
 
-// ✅ API Routes
+// ✅ API routes
 const productsRoute = require('./routes/products');
 app.use('/products', productsRoute);
 
-const phoneRoutes = require('./routes/phone'); // <-- This file should exist!
+const phoneRoutes = require('./routes/phone');
 app.use('/api/phone', phoneRoutes);
 
-// ✅ Serve static files from /public
-app.use(express.static('public'));
+// ✅ Serve static files from root directory (optional but useful for CSS/images/JS)
+app.use(express.static(__dirname));
 
-// ✅ Root sanity check route
+// ✅ Serve admin.html with explicit route
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// ✅ Root sanity check
 app.get('/', (req, res) => {
   res.send('🌱 plantuniform API is running!');
 });
 
-// ✅ Custom route to serve admin page nicely (no .html in URL)
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// ✅ Start the server
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
