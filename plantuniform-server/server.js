@@ -3,12 +3,31 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 
 // ✅ Middleware
 app.use(cors());
 app.use(express.json());
+
+// ✅ Multer config for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Make sure this folder exists!
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
+// ✅ Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
+
+// ✅ Serve static files from root (CSS, JS, etc.)
+app.use(express.static(__dirname));
 
 // ✅ Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
@@ -21,7 +40,6 @@ mongoose.connect(process.env.MONGO_URI, {
   process.exit(1);
 });
 
-// ✅ Debug collections when connected
 mongoose.connection.on('connected', () => {
   console.log('✅ DB name:', mongoose.connection.name);
   console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
@@ -34,13 +52,19 @@ app.use('/products', productsRoute);
 const phoneRoutes = require('./routes/phone');
 app.use('/api/phone', phoneRoutes);
 
-// ✅ Serve static files (CSS, JS, images, etc.) from root directory
-app.use(express.static(__dirname));
+// ✅ File upload endpoint for products
+app.post('/upload', upload.single('imageFile'), (req, res) => {
+  console.log('🔍 Uploaded file:', req.file);
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+  res.json({ filePath: `/uploads/${req.file.filename}` });
+});
 
-// ✅ Serve admin.html at /admin (OPTION 1)
+// ✅ Serve admin.html at /admin
 app.get('/admin', (req, res) => {
   const filePath = path.join(__dirname, 'admin.html');
-  console.log('🔍 Serving admin.html from:', filePath); // ✅ This log!
+  console.log('🔍 Serving admin.html from:', filePath);
   res.sendFile(filePath);
 });
 
