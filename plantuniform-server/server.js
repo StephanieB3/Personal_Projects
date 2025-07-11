@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI, {
   process.exit(1);
 });
 
-// ✅ Debug collections
+// ✅ Debug collections when connected
 mongoose.connection.on('connected', () => {
   console.log('✅ DB name:', mongoose.connection.name);
   console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
@@ -34,12 +34,17 @@ app.use('/products', productsRoute);
 const phoneRoutes = require('./routes/phone');
 app.use('/api/phone', phoneRoutes);
 
-// ✅ Serve static files from root directory (optional but useful for CSS/images/JS)
+// ✅ Serve static files (CSS, JS, images, etc.) from root directory
 app.use(express.static(__dirname));
 
-// ✅ Serve admin.html with explicit route
+// ✅ Serve admin.html at /admin (OPTION 1)
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// ✅ OPTIONAL: Redirect /admin.html to /admin for consistency
+app.get('/admin.html', (req, res) => {
+  res.redirect('/admin');
 });
 
 // ✅ Root sanity check
