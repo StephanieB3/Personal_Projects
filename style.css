@@ -190,21 +190,44 @@ header {
   padding: 0 20px;
 }
 
+/* ✅ Image flip box + tooltip */
 .image-box {
-  width: 100%;
+  position: relative;
+  display: inline-block;
   max-width: 400px;
+  width: 100%;
   margin: 0 auto 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;   /* ✅ Shows it’s clickable! */
-  overflow: hidden;
+  cursor: pointer;
 }
 
 .image-box img {
   width: 100%;
   display: block;
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  border-radius: 10px;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 140px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.image-box:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* === Contact Page Styles === */

@@ -5,7 +5,6 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-
 const app = express();
 
 // ✅ Use CORS to allow cross-origin requests (frontend → backend)
@@ -30,10 +29,13 @@ mongoose.connection.on('connected', () => {
   console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
 });
 
-
 // ✅ API Routes
 const productsRoute = require('./routes/products');
 app.use('/products', productsRoute);
+
+// ✅ NEW: Add your phone routes
+const phoneRoutes = require('./routes/phone'); // <-- make sure this file exists!
+app.use('/api/phone', phoneRoutes); // your POST route will be /api/phone
 
 // ✅ Optional: Serve static files from /public if you deploy the frontend together
 app.use(express.static('public'));
@@ -48,4 +50,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
-

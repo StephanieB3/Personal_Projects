@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Product Detail</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -37,7 +37,8 @@
   <!-- ✅ Product Detail Section -->
   <section class="product-detail">
     <div class="image-box" id="image-box">
-      <img src="" alt="Product Image" id="product-image">
+      <img src="images/rflannelfront.jpg" alt="Product Front" id="product-image">
+      <span class="tooltip-text">Click to flip image</span>
     </div>
 
     <h1 id="product-name"></h1>
@@ -47,7 +48,7 @@
     <button>Add to Bag</button>
   </section>
 
-  <!-- ✅ Script for Dropdown Menu + Dynamic Product Fetch + Image Toggle -->
+  <!-- ✅ Script for Dropdown, Dynamic Fetch, Image Flip -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // ✅ Dropdown menu
@@ -64,37 +65,31 @@
         }
       });
 
-      // ✅ Get slug from URL
+      // ✅ Get slug
       const params = new URLSearchParams(window.location.search);
       const slug = params.get('slug');
-
       if (!slug) {
         alert('No product slug provided!');
         return;
       }
 
-      // ✅ Fetch product data from your backend
+      // ✅ Fetch product
       fetch(`https://personal-projects-1.onrender.com/products/${slug}`)
         .then(res => {
-          if (!res.ok) {
-            throw new Error('Product not found.');
-          }
+          if (!res.ok) throw new Error('Product not found.');
           return res.json();
         })
         .then(product => {
-          // Fill in the page
           document.getElementById('product-name').textContent = product.name;
           document.getElementById('product-size').textContent = `Size: ${product.size}`;
           document.getElementById('product-price').textContent = `Price: $${product.price.toFixed(2)}`;
 
-          // Image toggle setup
           const imageBox = document.getElementById('image-box');
           const productImage = document.getElementById('product-image');
-
           const frontView = product.image;
-          const backView = product.backImage; // Make sure your DB has this field!
-          let showingFront = true;
+          const backView = product.backImage || frontView;
 
+          let showingFront = true;
           productImage.src = frontView;
 
           imageBox.addEventListener('click', () => {

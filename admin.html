@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      max-width: 800px;
+      margin: 50px auto;
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #222;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input {
+      padding: 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    input:focus {
+      border-color: navy;
+      outline: none;
+    }
+    button {
+      padding: 12px;
+      background: navy;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #001f5f;
+    }
+    #result {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .success { color: green; }
+    .error { color: red; }
+
+    .image-preview {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .image-preview img {
+      max-width: 150px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .product-list {
+      margin-top: 40px;
+    }
+    .product-item {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .product-item p {
+      margin: 0;
+    }
+    .delete-btn {
+      background: crimson;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background: darkred;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✨ Admin Dashboard</h1>
+
+  <!-- ✅ Add product form -->
+  <form id="product-form">
+    <label>Product Name</label>
+    <input name="name" required>
+
+    <label>Price ($)</label>
+    <input name="price" type="number" step="0.01" required>
+
+    <label>Size</label>
+    <input name="size" required>
+
+    <label>Category</label>
+    <input name="category" placeholder="flannels / tshirts / pants" required>
+
+    <label>Slug</label>
+    <input name="slug" required>
+
+    <label>Front Image URL</label>
+    <input name="image" oninput="previewImages()" required>
+
+    <label>Back Image URL</label>
+    <input name="backImage" oninput="previewImages()">
+
+    <button type="submit">Add Product</button>
+  </form>
+
+  <div class="image-preview" id="image-preview"></div>
+
+  <p id="result"></p>
+
+  <!-- ✅ Products List -->
+  <h2>📋 Existing Products</h2>
+  <div class="product-list" id="product-list">Loading...</div>
+
+  <script>
+    const form = document.getElementById('product-form');
+    const result = document.getElementById('result');
+    const preview = document.getElementById('image-preview');
+    const list = document.getElementById('product-list');
+
+    const BACKEND_URL = 'https://personal-projects-1.onrender.com'; // ✅ Your deployed backend URL
+
+    // ✅ Load products
+    async function loadProducts() {
+      const res = await fetch(`${BACKEND_URL}/products`);
+      const products = await res.json();
+      list.innerHTML = '';
+
+      if (products.length === 0) {
+        list.innerHTML = '<p>No products yet.</p>';
+        return;
+      }
+
+      products.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'product-item';
+        item.innerHTML = `
+          <div>
+            <p><strong>${p.name}</strong> ($${p.price})</p>
+            <p>Category: ${p.category} | Size: ${p.size}</p>
+          </div>
+          <button class="delete-btn" onclick="deleteProduct('${p._id}')">Delete</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // ✅ Delete product
+    async function deleteProduct(id) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      const res = await fetch(`${BACKEND_URL}/products/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        loadProducts();
+      } else {
+        alert('Failed to delete.');
+      }
+    }
+
+    // ✅ Add product
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      result.textContent = '';
+      result.className = '';
+
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch(`${BACKEND_URL}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const json = await res.json();
+      if (res.ok) {
+        result.textContent = '✅ ' + json.message;
+        result.className = 'success';
+        form.reset();
+        preview.innerHTML = '';
+        loadProducts();
+      } else {
+        result.textContent = '❌ ' + (json.error || 'Failed to create product.');
+        result.className = 'error';
+      }
+    });
+
+    // ✅ Preview images
+    function previewImages() {
+      const imageURL = form.elements['image'].value;
+      const backURL = form.elements['backImage'].value;
+      preview.innerHTML = '';
+
+      if (imageURL) {
+        preview.innerHTML += `<div><strong>Front:</strong><br><img src="${imageURL}"></div>`;
+      }
+      if (backURL) {
+        preview.innerHTML += `<div><strong>Back:</strong><br><img src="${backURL}"></div>`;
+      }
+    }
+
+    loadProducts();
+  </script>
+
+</body>
+</html>
