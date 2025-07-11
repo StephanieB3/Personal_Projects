@@ -1,13 +1,18 @@
+// ✅ Load environment variables first
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
+// ✅ Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,20 +28,27 @@ mongoose.connection.on('connected', () => {
   console.log('✅ Collections:', Object.keys(mongoose.connection.collections));
 });
 
-// ✅ Products route
+// ✅ API Routes
 const productsRoute = require('./routes/products');
 app.use('/products', productsRoute);
 
-// ✅ NEW: Phone route
-const phoneRoutes = require('./routes/phone'); // <-- make sure this file exists!
+const phoneRoutes = require('./routes/phone'); // <-- This file should exist!
 app.use('/api/phone', phoneRoutes);
 
+// ✅ Serve static files from /public
 app.use(express.static('public'));
 
+// ✅ Root sanity check route
 app.get('/', (req, res) => {
   res.send('🌱 plantuniform API is running!');
 });
 
+// ✅ Custom route to serve admin page nicely (no .html in URL)
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// ✅ Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
