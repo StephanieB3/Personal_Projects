@@ -12,10 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Multer config for file uploads
+// ✅ Multer config for front & back image uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Make sure this folder exists!
+    cb(null, 'uploads/'); // Make sure 'uploads/' exists!
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -26,7 +26,7 @@ const upload = multer({ storage: storage });
 // ✅ Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
-// ✅ Serve static files from root (CSS, JS, etc.)
+// ✅ Serve other static files from root if needed
 app.use(express.static(__dirname));
 
 // ✅ Connect to MongoDB Atlas
@@ -52,13 +52,26 @@ app.use('/products', productsRoute);
 const phoneRoutes = require('./routes/phone');
 app.use('/api/phone', phoneRoutes);
 
-// ✅ File upload endpoint for products
-app.post('/upload', upload.single('imageFile'), (req, res) => {
-  console.log('🔍 Uploaded file:', req.file);
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
+// ✅ Handle front & back image uploads
+app.post('/upload', upload.fields([
+  { name: 'frontImageFile', maxCount: 1 },
+  { name: 'backImageFile', maxCount: 1 }
+]), (req, res) => {
+  console.log('🔍 Uploaded files:', req.files);
+
+  if (!req.files || (!req.files['frontImageFile'] && !req.files['backImageFile'])) {
+    return res.status(400).json({ error: 'No files uploaded.' });
   }
-  res.json({ filePath: `/uploads/${req.file.filename}` });
+
+  const response = {};
+  if (req.files['frontImageFile']) {
+    response.frontImagePath = `/uploads/${req.files['frontImageFile'][0].filename}`;
+  }
+  if (req.files['backImageFile']) {
+    response.backImagePath = `/uploads/${req.files['backImageFile'][0].filename}`;
+  }
+
+  res.json(response);
 });
 
 // ✅ Serve admin.html at /admin
