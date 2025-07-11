@@ -9,6 +9,6 @@ const phoneNumberSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-}, {collection: 'Phone' });
+}, {collection: 'phone' });
 
 module.exports = mongoose.model('PhoneNumber', phoneNumberSchema);
