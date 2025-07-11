@@ -39,7 +39,9 @@ app.use(express.static(__dirname));
 
 // ✅ Serve admin.html at /admin (OPTION 1)
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  const filePath = path.join(__dirname, 'admin.html');
+  console.log('🔍 Serving admin.html from:', filePath); // ✅ This log!
+  res.sendFile(filePath);
 });
 
 // ✅ OPTIONAL: Redirect /admin.html to /admin for consistency
