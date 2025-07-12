@@ -52,20 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ✅ Submit phone function — uses async/await & full backend URL if needed
+// ✅ Submit phone function — calls deployed backend URL
 async function submitPhone() {
   const input = document.getElementById('phone-input');
   const phone = input.value.trim();
   const regex = /^\d{3}-?\d{3}-?\d{4}$/;
 
   if (regex.test(phone)) {
-    // ✅ Save to localStorage
+    // ✅ Save locally so modal doesn’t reappear
     localStorage.setItem('userPhone', phone);
 
     try {
-      // 🔑 If your backend is deployed, use its full URL
-      // Example: const url = 'https://your-backend-url.onrender.com/api/phone';
-      const url = '/api/phone';
+      // ✅ Use your Render backend URL here
+      const url = 'https://personal-projects-1.onrender.com/api/phone';
 
       const response = await fetch(url, {
         method: 'POST',

@@ -4,7 +4,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const multer = require('multer');
-const fs = require('fs');
 
 const app = express();
 
@@ -15,30 +14,34 @@ app.use(express.json());
 // ✅ Multer config for front & back image uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Make sure 'uploads/' exists!
+    cb(null, 'uploads/'); // Make sure this folder exists!
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
-// ✅ Serve uploaded files statically
+// ✅ Serve uploaded images statically
 app.use('/uploads', express.static('uploads'));
 
-// ✅ Serve other static files from root if needed
+// ✅ Serve static files:
+// 1) From the project ROOT (../) — this serves style.css, index.html, etc.
+app.use(express.static(path.join(__dirname, '..')));
+
+// 2) From plantuniform-server — this serves admin.html
 app.use(express.static(__dirname));
 
 // ✅ Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 })
-.then(() => console.log('✅ MongoDB Atlas connection established!'))
-.catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
-  process.exit(1);
-});
+  .then(() => console.log('✅ MongoDB Atlas connection established!'))
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 
 mongoose.connection.on('connected', () => {
   console.log('✅ DB name:', mongoose.connection.name);
@@ -52,7 +55,7 @@ app.use('/products', productsRoute);
 const phoneRoutes = require('./routes/phone');
 app.use('/api/phone', phoneRoutes);
 
-// ✅ Handle front & back image uploads
+// ✅ Handle front & back image uploads with Multer
 app.post('/upload', upload.fields([
   { name: 'frontImageFile', maxCount: 1 },
   { name: 'backImageFile', maxCount: 1 }
@@ -81,7 +84,7 @@ app.get('/admin', (req, res) => {
   res.sendFile(filePath);
 });
 
-// ✅ OPTIONAL: Redirect /admin.html to /admin for consistency
+// ✅ OPTIONAL: Redirect /admin.html to /admin
 app.get('/admin.html', (req, res) => {
   res.redirect('/admin');
 });
